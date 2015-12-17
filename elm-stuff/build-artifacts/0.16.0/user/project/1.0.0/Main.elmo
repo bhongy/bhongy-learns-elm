@@ -1,0 +1,42 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var incrementAll2 = $List.map(function (n) {    return n + 1;});
+   var incrementAll = function (list) {    return A2($List.map,function (n) {    return n + 1;},list);};
+   var multiply = F2(function (a,b) {    return a * b;});
+   var square = function (a) {    return A2(multiply,a,a);};
+   var productOfSquares = F2(function (a,b) {    return A2(multiply,square(a),square(b));});
+   var main = function () {
+      var br = A2($Html.br,_U.list([]),_U.list([]));
+      var print = function (n) {    return $Html.text($Basics.toString(n));};
+      return A2($Html.p,
+      _U.list([]),
+      _U.list([print(A2(multiply,3,5))
+              ,br
+              ,print(square(4))
+              ,br
+              ,print(A2(productOfSquares,2,3))
+              ,br
+              ,print(incrementAll(_U.list([1,2,3])))
+              ,br
+              ,print(incrementAll2(_U.list([1,2,3])))]));
+   }();
+   return _elm.Main.values = {_op: _op
+                             ,multiply: multiply
+                             ,square: square
+                             ,productOfSquares: productOfSquares
+                             ,incrementAll: incrementAll
+                             ,incrementAll2: incrementAll2
+                             ,main: main};
+};
