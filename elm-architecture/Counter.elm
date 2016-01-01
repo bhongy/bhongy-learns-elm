@@ -1,4 +1,11 @@
-module Counter where
+module Counter
+  ( Model
+  , init
+  , Action
+  , update
+  , view
+  )
+  where
 
 import Html exposing (..)
 import Html.Attributes exposing (style)
@@ -8,6 +15,9 @@ import Html.Events exposing (onClick)
 -- Model
 
 type alias Model = Int
+
+init : Int -> Model
+init count = count
 
 
 -- Update
