@@ -2,6 +2,8 @@ node_modules/
 dist/
 
 # elm-package generated files
+# elm-package.json will "not" be ignored
+#   unless it's in `elm-stuff` folder
 elm.js
 elm-stuff/
 
