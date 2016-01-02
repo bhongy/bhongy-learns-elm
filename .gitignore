@@ -1,5 +1,9 @@
+node_modules/
+dist/
+
 # elm-package generated files
 elm.js
 elm-stuff/
+
 # elm-repl generated files
 repl-temp-*
