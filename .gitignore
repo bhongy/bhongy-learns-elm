@@ -1,6 +1,9 @@
 node_modules/
 dist/
 
+# ignore this folder since it is a repo itself
+noredink-elm-webapp/
+
 # elm-package generated files
 # elm-package.json will "not" be ignored
 #   unless it's in `elm-stuff` folder
