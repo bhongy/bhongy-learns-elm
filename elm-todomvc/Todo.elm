@@ -17,6 +17,8 @@ for notes on structuring more complex GUIs with Elm:
 https://github.com/evancz/elm-architecture-tutorial/
 -}
 
+import String
+
 --import Html exposing (..)
 --import Html.Attributes
 --import Html.Events
@@ -61,3 +63,99 @@ emptyModel =
   , tasks      = []
   , visibility = "All"
   }
+
+
+-- UPDATE
+
+-- A description of the kinds of actions that can be performed on the model of
+-- our application. See the following for more info on this pattern and
+-- some alternatives: https://github.com/evancz/elm-architecture-tutorial/
+type Action
+  = NoOp
+  | UpdateInput String
+  | EditTask ID Bool
+  | UpdateTask ID String
+  | Add
+  | Delete ID
+  | DeleteComplete
+  | Check ID Bool
+  | CheckAll Bool
+  | ChangeVisibility String
+
+
+-- How we update our Model on a given Action?
+update : Action -> Model -> Model
+update action model =
+  case action of
+
+    NoOp ->
+      model
+
+    UpdateInput inputValue ->
+      { model | input = inputValue }
+
+    -- ? how to abstract/DRY this and UpdateTask ?
+    -- ? is there a pattern to pass the field to be edited ?
+    -- ? or how can pass `updateTask` as callback or something ?
+    EditTask id isEditing ->
+      let
+        updateTask task =
+          if task.id == id then
+            { task | editing = isEditing }
+          else
+            task
+      in
+        { model | tasks = List.map updateTask model.tasks }
+
+    UpdateTask id description ->
+      let
+        updateTask task =
+          if task.id == id then
+            { task | description = description }
+          else
+            task
+      in
+        { model | tasks = List.map updateTask model.tasks }
+
+    Add ->
+      let
+        taskToAdd = newTask model.uid model.input
+      in
+        if not ( String.isEmpty model.input ) then
+          { model
+              | uid        = model.uid + 1
+              , input      = ""
+              , tasks      = model.tasks ++ [ taskToAdd ]
+          }
+        else
+          model
+
+    Delete id ->
+      { model
+          | tasks = List.filter (\ task -> task.id /= id ) model.tasks
+      }
+
+    -- WOW! cool implementation with `<<`
+    DeleteComplete ->
+      { model
+          | tasks = List.filter ( not << .completed ) model.tasks
+      }
+
+    Check id isCompleted ->
+      let
+        updateTask task =
+          if task.id == id then
+            { task | completed = isCompleted }
+          else
+            task
+      in
+        { model | tasks = List.map updateTask model.tasks }
+
+    CheckAll isCompleted ->
+      let
+        updateTask task = { task | completed = isCompleted }
+      in
+        { model | tasks = List.map updateTask model.tasks }        
+
+    ChangeVisibility visibility ->
+      { model | visibility = visibility }
