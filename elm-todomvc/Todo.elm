@@ -15,6 +15,13 @@ this in the Pong tutorial: http://elm-lang.org/blog/making-pong
 This program is not particularly large, so definitely see the following
 for notes on structuring more complex GUIs with Elm:
 https://github.com/evancz/elm-architecture-tutorial/
+
+@bhongy ---
+  Model  is the state of our application (how it looks like at a certain point in time)
+  Action is (data, events) what needs to happen
+  Update is "how" would we change Model when we see a particular Action
+  View   is just a function to represent the Model (always the same given the same state)
+
 -}
 
 import String
