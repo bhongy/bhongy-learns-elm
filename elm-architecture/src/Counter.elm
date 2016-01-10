@@ -7,6 +7,7 @@ module Counter
 
 import Html exposing (..)
 import Html.Attributes exposing (style)
+import Html.Events as Events
 
 
 
@@ -18,9 +19,46 @@ type alias Model =
 
 
 -- ? How to use (Maybe Int) to default to 0 if passing nothing ?
-init : Int -> Model
+init : Int -> Signal Model
 init initialCount =
-  initialCount
+  Signal.foldp update initialCount actionDispatcher.signal
+
+
+
+
+-- UPDATE
+
+type Action
+  = NoOp
+  | Increment
+  | Decrement
+
+
+update : Action -> Model -> Model
+update action model =
+  case action of
+
+    NoOp ->
+      model
+
+    Increment ->
+      model + 1
+
+    Decrement ->
+      model - 1
+
+
+
+
+-- ACTION DISPATCHER (MAILBOX)
+
+actionDispatcher : Signal.Mailbox Action
+actionDispatcher =
+  Signal.mailbox NoOp
+
+
+onClick action =
+  Events.onClick actionDispatcher.address action
 
 
 
@@ -56,12 +94,16 @@ view model =
   p
     []
     [ button
-        [ buttonStyle ]
+        [ buttonStyle 
+        , onClick Decrement
+        ]
         [ text "-" ]
     , span
         [ countStyle ]
         [ text <| toString model ]
     , button
-        [ buttonStyle ]
+        [ buttonStyle
+        , onClick Increment
+        ] 
         [ text "+" ]
     ]
