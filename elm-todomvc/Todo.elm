@@ -83,6 +83,17 @@ emptyModel =
   }
 
 
+initialModel : Model
+initialModel =
+  -- learn this, useful pattern : value `withDefault`
+  Maybe.withDefault emptyModel getStorage
+
+
+model : Signal Model
+model =
+  Signal.foldp update initialModel actions.signal
+
+
 
 
 -- UPDATE
@@ -467,3 +478,18 @@ port focus =
       -- transform action signal to signal of string value (selector)
       |> Signal.map toSelector
 
+
+
+
+-- WIRING
+
+-- actions from user input
+-- nice semantic name for this mailbox *thumbsup*
+actions : Signal.Mailbox Action
+actions =
+  Signal.mailbox NoOp
+
+
+main : Signal Html
+main =
+  Signal.map (view actions.address) model
