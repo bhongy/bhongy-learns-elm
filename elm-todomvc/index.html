@@ -27,6 +27,9 @@
   function setFocus(selector) {
     var nodes = document.querySelectorAll( selector );
 
+    // `document.activeElement` : Returns the currently
+    //     focused element (the element that will get
+    //     keystroke events if the user types any).
     if ( nodes.length === 1 && document.activeElement !== nodes[0] ) {
       nodes[0].focus();
     }

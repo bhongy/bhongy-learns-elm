@@ -424,3 +424,40 @@ view address model =
         ]
     , infoFooter
     ]
+
+
+
+
+-- PORTS
+
+port getStorage : Maybe Model
+
+
+port setStorage : Signal Model
+port setStorage =
+  modelChanges
+
+
+port focus : Signal String
+port focus =
+  let
+    initialEditTaskSignal =
+      EditTask 0 True
+
+    needsFocus action =
+      case action of
+        EditTask id bool -> bool
+        _ -> False
+
+    toSelector action =
+      case action of
+        EditTask id _ -> "#todo-" ++ toString id
+        _ -> ""
+
+  in
+    actions.signal
+      -- filter for EditTask signals only
+      |> Signal.filter needsFocus initialEditTaskSignal
+      -- transform action signal to signal of string value (selector)
+      |> Signal.map toSelector
+
