@@ -48,7 +48,7 @@ type alias Model =
   { uid        : Int
   , input      : String
   , tasks      : List Task
-  , visibility : String
+  , visibility : Visibility
   }
 
 
@@ -87,7 +87,7 @@ type Action
   | DeleteComplete
   | Check ID Bool
   | CheckAll Bool
-  | ChangeVisibility String
+  | ChangeVisibility Visibility
 
 
 -- How we update our Model on a given Action?
