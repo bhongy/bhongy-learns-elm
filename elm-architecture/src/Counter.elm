@@ -4,17 +4,16 @@ module Counter
   , Action
   , update
   , view
-  , Context
-  , removableView
-  )
-  where
+  ) where
 
 import Html exposing (..)
 import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 
 
--- Model
+
+
+-- MODEL
 
 type alias Model = Int
 
@@ -23,7 +22,9 @@ init : Int -> Model
 init count = count
 
 
--- Update
+
+
+-- UPDATE
 
 type Action
   = Increment
@@ -41,31 +42,16 @@ update action model =
       model - 1
 
 
--- View
+
+
+-- VIEW
 
 view : Signal.Address Action -> Model -> Html
 view address model =
   div []
     [ button [ onClick address Decrement ] [ text "-" ]
-    , div [ countStyle ] [ text (toString model) ]
+    , div [ countStyle ] [ text ( toString model ) ]
     , button [ onClick address Increment ] [ text "+" ]
-    ]
-
-
-type alias Context =
-  { actions : Signal.Address Action
-  , remove : Signal.Address ()
-  }
-
-
-removableView : Context -> Model -> Html
-removableView context model =
-  div []
-    [ button [ onClick context.actions Decrement ] [ text "-" ]
-    , div [ countStyle ] [ text (toString model) ]
-    , button [ onClick context.actions Increment ] [ text "+" ]
-    , div [ countStyle ] []
-    , button [ onClick context.remove () ] [ text "X" ]
     ]
 
 
@@ -78,3 +64,22 @@ countStyle =
     , ("width", "50px")
     , ("text-align", "center")
     ]
+
+
+
+
+--type alias Context =
+--  { actions : Signal.Address Action
+--  , remove : Signal.Address ()
+--  }
+
+
+--removableView : Context -> Model -> Html
+--removableView context model =
+--  div []
+--    [ button [ onClick context.actions Decrement ] [ text "-" ]
+--    , div [ countStyle ] [ text (toString model) ]
+--    , button [ onClick context.actions Increment ] [ text "+" ]
+--    , div [ countStyle ] []
+--    , button [ onClick context.remove () ] [ text "X" ]
+--    ]
