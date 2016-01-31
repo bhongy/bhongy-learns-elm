@@ -6,7 +6,8 @@ module CounterList
 
 
 import Counter
-import Html exposing (Html, div, button, text)
+import Html exposing (Html, Attribute, div, ul, li, button, text)
+import Html.Attributes exposing (style)
 import Html.Events exposing (onClick)
 
 
@@ -80,24 +81,45 @@ update action model =
 
 
 
----- VIEW
+-- VIEW
 
---viewCounter : Signal.Address Action -> (ID, Counter.Model) -> Html
---viewCounter address (id, model) =
---  let
---    modifyAddress = Modify id |> Signal.forwardTo address
---    removeAddress = Remove id |> always |> Signal.forwardTo address
+viewCounter : Signal.Address Action -> (ID, Counter.Model) -> Html
+viewCounter address (id, model) =
 
---    -- use type contrustor function
---    context = Counter.Context modifyAddress removeAddress
---  in
---    Counter.removableView context model
+  -- @bhongy, I don't fully understand .forwardTo conceptually
+  --   need to try more examples until it "clicks"
+
+  -- list will receive "Modify" action with "id"
+  -- and forwarding the "counterAction" to "Counter.update"
+  -- use this pattern when you have nested components that need
+  --   to pass the Action down
+
+  let modifyAddress = Signal.forwardTo address <| Modify id
+  in
+    li []
+      [ Counter.view modifyAddress model
+      , button [ onClick address <| Remove id ] [ text "x" ]
+      ]
 
 
---view : Signal.Address Action -> Model -> Html
---view address model =
---  let
---    counters = List.map (viewCounter address) model.counters
---    insert = button [ onClick address Insert ] [ text "Add" ]
---  in
---    div [] ( insert :: counters )
+-- "Insert" and "Remove" are properties (methods) of the list
+-- "Modify" is the property of each individual Counter
+--   the list just passes the information to the correct Counter
+
+view : Signal.Address Action -> Model -> Html
+view address model =
+  -- create variable here so it is clear what this is
+  let counters = List.map (viewCounter address) model.counters
+  in
+    div []
+      [ button [ onClick address Insert ] [ text "Add" ]
+      , ul [ listStyle ] counters
+      ]
+
+
+listStyle : Attribute
+listStyle =
+  style
+    [ ("list-style", "none")
+    , ("padding-left", "0")
+    ]
