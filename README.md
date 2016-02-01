@@ -1,4 +1,4 @@
 On this branch, I experiment with examples from:
-http://elm-lang.org/examples
+http://elm-lang.org/guide/reactivity
 
-@12/23/2015
+@1/31/2016
